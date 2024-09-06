@@ -62,7 +62,7 @@
 
         // view 
         startGame();
-        function updateView() {            
+        function updateView() {
             document.getElementById('app').innerHTML = /*HTML*/`
                 ${createWonHtml()}
                 <div class="game-container">
@@ -82,22 +82,34 @@
             `;
         }
 
-        function createWonHtml(){
-            if(smallDiskTowerIndex != 2 
+        function createWonHtml() {
+            if (smallDiskTowerIndex != 2
                 || mediumDiskTowerIndex != 2
                 || largeDiskTowerIndex != 2
             ) return '';
             return `Du har løst spillet. <button onclick="startGame()">Start på nytt</button>`;
         }
 
-        function createButtonsForDiskHtml(diskIndex, size){
+        function createButtonsForDiskHtml(diskIndex, size) {
             let left = diskIndex == 0 ? '' : createButtonHtml(`move${size}Disk(0)`, 'venstre');
             let middle = diskIndex == 1 ? '' : createButtonHtml(`move${size}Disk(1)`, 'midtre');
             let right = diskIndex == 2 ? '' : createButtonHtml(`move${size}Disk(2)`, 'høyre');
+            if (size == 'Medium') {
+                if(smallDiskTowerIndex == 0) left = '';
+                if(smallDiskTowerIndex == 1) middle = '';
+                if(smallDiskTowerIndex == 2) right = '';
+            } else if (size == 'Large') {
+                if(smallDiskTowerIndex == 0) left = '';
+                if(smallDiskTowerIndex == 1) middle = '';
+                if(smallDiskTowerIndex == 2) right = '';
+                if(mediumDiskTowerIndex == 0) left = '';
+                if(mediumDiskTowerIndex == 1) middle = '';
+                if(mediumDiskTowerIndex == 2) right = '';
+            }
             return left + middle + right;
         }
 
-        function createButtonHtml(onclick, label){
+        function createButtonHtml(onclick, label) {
             return /*HTML*/`
                 <button onclick="${onclick}">${label} tårn</button>            
             `;
@@ -122,7 +134,7 @@
         }
 
         // controller
-        function startGame(){
+        function startGame() {
             smallDiskTowerIndex = 0;
             mediumDiskTowerIndex = 0;
             largeDiskTowerIndex = 0;
