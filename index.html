@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .game-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 auto;
+            max-width: 600px;
+        }
+
+        .tower-container {
+            position: relative;
+        }
+
+        .tower {
+            width: 100px;
+            height: 120px;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            border-bottom: 8px solid darkred;
+        }
+
+        .tower-container::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 120px;
+            z-index: -10;
+            background-color: darkred;
+        }
+
+        .disk {
+            width: 20px;
+            height: 20px;
+            background-color: blue;
+            border: 4px solid gray;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+    </div>
+
+    <script>
+        // model
+        //   hvor er diskene, 0 = venstre tårn, 1 = midten, 2 = høyre
+        //   alle starter til venstre
+        let smallDiskTowerIndex;
+        let mediumDiskTowerIndex;
+        let largeDiskTowerIndex;
+
+        // view 
+        startGame();
+        function updateView() {            
+            document.getElementById('app').innerHTML = /*HTML*/`
+                ${createWonHtml()}
+                <div class="game-container">
+                    ${createTower(0)}
+                    ${createTower(1)}
+                    ${createTower(2)}
+                </div>
+                Flytt liten disk til   
+                    ${createButtonsForDiskHtml(smallDiskTowerIndex, 'Small')}
+                <br/>
+                Flytt medium disk
+                    ${createButtonsForDiskHtml(mediumDiskTowerIndex, 'Medium')}
+                <br/>
+                Flytt stor disk
+                    ${createButtonsForDiskHtml(largeDiskTowerIndex, 'Large')}
+                <br/>
+            `;
+        }
+
+        function createWonHtml(){
+            if(smallDiskTowerIndex != 2 
+                || mediumDiskTowerIndex != 2
+                || largeDiskTowerIndex != 2
+            ) return '';
+            return `Du har løst spillet. <button onclick="startGame()">Start på nytt</button>`;
+        }
+
+        function createButtonsForDiskHtml(diskIndex, size){
+            let left = diskIndex == 0 ? '' : createButtonHtml(`move${size}Disk(0)`, 'venstre');
+            let middle = diskIndex == 1 ? '' : createButtonHtml(`move${size}Disk(1)`, 'midtre');
+            let right = diskIndex == 2 ? '' : createButtonHtml(`move${size}Disk(2)`, 'høyre');
+            return left + middle + right;
+        }
+
+        function createButtonHtml(onclick, label){
+            return /*HTML*/`
+                <button onclick="${onclick}">${label} tårn</button>            
+            `;
+        }
+
+        function createTower(index) {
+            return /*HTML*/`
+                <div class="tower-container">
+                    <div class="tower">
+                        ${largeDiskTowerIndex == index ? createDiskHtml(70) : ''}
+                        ${mediumDiskTowerIndex == index ? createDiskHtml(50) : ''}
+                        ${smallDiskTowerIndex == index ? createDiskHtml(30) : ''}
+                    </div>
+                </div>                
+            `;
+        }
+
+        function createDiskHtml(size) {
+            return /*HTML*/`
+                <div class="disk" style="width: ${size}px"></div>
+            `;
+        }
+
+        // controller
+        function startGame(){
+            smallDiskTowerIndex = 0;
+            mediumDiskTowerIndex = 0;
+            largeDiskTowerIndex = 0;
+            updateView();
+        }
+        function moveSmallDisk(toTowerIndex) {
+            smallDiskTowerIndex = toTowerIndex;
+            updateView();
+        }
+
+        function moveMediumDisk(toTowerIndex) {
+            if (smallDiskTowerIndex == toTowerIndex) return;
+            mediumDiskTowerIndex = toTowerIndex;
+            updateView();
+        }
+
+        function moveLargeDisk(toTowerIndex) {
+            // if (smallDiskTowerIndex == toTowerIndex 
+            // || mediumDiskTowerIndex == toTowerIndex) return;
+            if (smallDiskTowerIndex == toTowerIndex) return;
+            if (mediumDiskTowerIndex == toTowerIndex) return;
+            largeDiskTowerIndex = toTowerIndex;
+            updateView();
+        }
+
+        document.body.innerHTML += `
+            <ol>
+                <li>
+                    Skjul alltid knappene som flytter en disk dit den allerede er. Skjul også knappene som er ulovlige å utføre.
+                </li>
+                <li>
+                    Vis en melding på skjermen hvis spillet er løst, det vil si at alle diskene er på høyre tårn. Vis i det
+                    tilfellet en knapp for å starte spillet på nytt. 
+                </li>
+            </ol>
+        `;
+    </script>
+</body>
+
+</html>
