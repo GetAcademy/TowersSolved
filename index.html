@@ -95,16 +95,16 @@
             let middle = diskIndex == 1 ? '' : createButtonHtml(`move${size}Disk(1)`, 'midtre');
             let right = diskIndex == 2 ? '' : createButtonHtml(`move${size}Disk(2)`, 'høyre');
             if (size == 'Medium') {
-                if(smallDiskTowerIndex == 0) left = '';
-                if(smallDiskTowerIndex == 1) middle = '';
-                if(smallDiskTowerIndex == 2) right = '';
+                if (smallDiskTowerIndex == 0) left = '';
+                if (smallDiskTowerIndex == 1) middle = '';
+                if (smallDiskTowerIndex == 2) right = '';
             } else if (size == 'Large') {
-                if(smallDiskTowerIndex == 0) left = '';
-                if(smallDiskTowerIndex == 1) middle = '';
-                if(smallDiskTowerIndex == 2) right = '';
-                if(mediumDiskTowerIndex == 0) left = '';
-                if(mediumDiskTowerIndex == 1) middle = '';
-                if(mediumDiskTowerIndex == 2) right = '';
+                if (smallDiskTowerIndex == 0) left = '';
+                if (smallDiskTowerIndex == 1) middle = '';
+                if (smallDiskTowerIndex == 2) right = '';
+                if (mediumDiskTowerIndex == 0) left = '';
+                if (mediumDiskTowerIndex == 1) middle = '';
+                if (mediumDiskTowerIndex == 2) right = '';
             }
             return left + middle + right;
         }
@@ -146,31 +146,20 @@
         }
 
         function moveMediumDisk(toTowerIndex) {
+            if (smallDiskTowerIndex == mediumDiskTowerIndex) return;
             if (smallDiskTowerIndex == toTowerIndex) return;
             mediumDiskTowerIndex = toTowerIndex;
             updateView();
         }
 
         function moveLargeDisk(toTowerIndex) {
-            // if (smallDiskTowerIndex == toTowerIndex 
-            // || mediumDiskTowerIndex == toTowerIndex) return;
+            if (smallDiskTowerIndex == largeDiskTowerIndex) return;
+            if (mediumDiskTowerIndex == largeDiskTowerIndex) return;
             if (smallDiskTowerIndex == toTowerIndex) return;
             if (mediumDiskTowerIndex == toTowerIndex) return;
             largeDiskTowerIndex = toTowerIndex;
             updateView();
         }
-
-        document.body.innerHTML += `
-            <ol>
-                <li>
-                    Skjul alltid knappene som flytter en disk dit den allerede er. Skjul også knappene som er ulovlige å utføre.
-                </li>
-                <li>
-                    Vis en melding på skjermen hvis spillet er løst, det vil si at alle diskene er på høyre tårn. Vis i det
-                    tilfellet en knapp for å starte spillet på nytt. 
-                </li>
-            </ol>
-        `;
     </script>
 </body>
 
